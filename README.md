@@ -98,6 +98,14 @@ jpeg-alike formats with special headers, huffman and quantization tables.
 *** Currently, vinetto does not manage to reconstitute correctly some Type 1
 thumbnails. ***
 
+Installation
+-----
+
+Keep track of installed files
+`python setup.py install --record file.txt`
+
+You can simply uninstall package with:
+`cat file.txt | xargs -I {} rm {}`
 
 Usage
 -----
