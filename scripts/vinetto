@@ -79,9 +79,10 @@ def getargs():
     if len(pargs) != 1:
         parser.error("incorrect number of arguments")
         
-    if (opts.outputdir == None) and (opts.htmlrep == True):
+    if (opts.outputdir is None) and (opts.htmlrep is True):
         parser.error("-H option requires -o with a directory name")
-    os.system("mkdir " + opts.outputdir + "/" + NUMBERED_THUMBS_DIR)
+    elif opts.outputdir is not None:
+        os.system("mkdir " + opts.outputdir + "/" + NUMBERED_THUMBS_DIR)
     return (pargs[0], opts.outputdir, opts.htmlrep, opts.encoding, opts.symlinks) 
 
 
@@ -139,7 +140,7 @@ if (longueur % 512 ) != 0:
                         + str(longueur) + ", non multiple 512"
 
 # Initializing extraction and optional html report
-if outputdir != None :
+if outputdir is not None :
     if not os.path.exists(outputdir):
         try :
             os.mkdir(outputdir)
@@ -168,7 +169,7 @@ if outputdir != None :
     quantization = open(resource_filename('vinetto', 'data/quantization'), "rb").read()
     huffman = open(resource_filename('vinetto', 'data/huffman'), "rb").read()
  
-    if htmlrep == True:
+    if htmlrep:
         report = vinreport.HtRep(tDBfname, outputdir, getencodings(), __version__ + " (r" + \
                                  __revision__[11:-2] +")")
         try:
@@ -328,7 +329,7 @@ while currentBlock != -2:
                 # --------------------------- header 2 ------------------------
                 # is it a type 2 thumbnail ? (full jpeg)
                 if  sr[0x0c:0x10] == "\xff\xd8\xff\xe0" :
-                    if outputdir != None :
+                    if outputdir is not None :
                         open(outputdir + "/" + NUMBERED_THUMBS_DIR + "/" + TNfname(SIDstr, "2") + ".jpg", \
                              "wb").write(sr[0x0c:])                                   
                 elif  unpack("<L",sr[0x0c:0x10])[0] == 1 :
@@ -339,7 +340,7 @@ while currentBlock != -2:
                               " *** Err : length(2) error in stream", SID
                         sys.exit(5)
                     # Type 1 TN processing ...
-                    if (PIL == "imported") and (outputdir != None):                                
+                    if (PIL == "imported") and (outputdir is not None):                                
                         type1sr = header[:0x14]
                         type1sr = type1sr + quantization
                         type1sr = type1sr + sr[0x1e:0x34]
@@ -352,7 +353,7 @@ while currentBlock != -2:
                         im = im.transpose(Image.FLIP_TOP_BOTTOM)
                         im.save(outputdir + TNfname(SIDstr, "1") + ".jpg", \
                                 "JPEG", quality=100)
-                    elif outputdir != None: # Cannot extract : PIL not imported
+                    elif outputdir is not None: # Cannot extract : PIL not imported
                         addTNStream(int(SIDstr), "1", "")
                 else :
                     print >> sys.stderr, \
@@ -388,7 +389,7 @@ if tnStreamOutOfSeq() == True:
     print >> sys.stderr, " * Info: ", tDBfname, \
                          "thumbnail stream index number out of usual sequence"
 
-if  (outputdir != None) and (nbCatEnt() != nbTNstr()):
+if  (outputdir is not None) and (nbCatEnt() != nbTNstr()):
     print >> sys.stderr, " ** Warning: ", tDBfname, " -- number of extracted ", \
                          "thumbnails does not match number of Catalog entries"
 
